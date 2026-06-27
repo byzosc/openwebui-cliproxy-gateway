@@ -1,0 +1,68 @@
+# 自托管私有 AI 网关套件 —— 编排
+# Self-hosted private AI gateway — orchestration
+#
+# 起停:  ./scripts/up.sh / ./scripts/down.sh / ./scripts/status.sh
+# 变量:  见 .env(从 .env.example 复制)
+#
+# 三个服务:
+#   cliproxyapi  把订阅 OAuth 登录态暴露成 OpenAI 兼容 /v1   (模型来源)
+#   open-webui   前端界面,连 cliproxyapi                     (界面)
+#   mihomo       出站代理,规则分流去国外上游                 (网络)
+# cloudflared(可选)给个公网入口,默认注释掉。
+
+networks:
+  aigw:
+    name: aigw
+
+services:
+  cliproxyapi:
+    image: ${CLIPROXY_IMAGE:-eceasy/cli-proxy-api:latest}
+    container_name: cliproxyapi
+    restart: unless-stopped
+    networks: [aigw]
+    ports:
+      - "${CLIPROXY_PORT:-8317}:8317"
+      # OAuth 登录回调端口(在管理后台点登录时用到)
+      - "8085:8085"
+      - "1455:1455"
+      - "54545:54545"
+    volumes:
+      - ./config/cliproxyapi/config.yaml:/CLIProxyAPI/config.yaml
+      - ${DATA_ROOT:-./data}/cliproxyapi/auths:/root/.cli-proxy-api
+
+  open-webui:
+    image: ${WEBUI_IMAGE:-ghcr.io/open-webui/open-webui:main}
+    container_name: open-webui
+    restart: unless-stopped
+    networks: [aigw]
+    depends_on: [cliproxyapi]
+    ports:
+      - "${WEBUI_PORT:-3000}:8080"
+    environment:
+      # 接入 cliproxyapi(同一 docker 网络,用容器名寻址)
+      - OPENAI_API_BASE_URLS=http://cliproxyapi:8317/v1
+      - OPENAI_API_KEYS=${CLIPROXY_API_KEY}
+      # 出站走 mihomo(Open WebUI 的联网搜索等功能需要)
+      - HTTPS_PROXY=${OUTBOUND_PROXY_URL:-http://mihomo:7890}
+      # 关闭注册,仅管理员可登
+      - ENABLE_SIGNUP=false
+    volumes:
+      - ${DATA_ROOT:-./data}/open-webui:/app/backend/data
+
+  mihomo:
+    image: ${MIHOMO_IMAGE:-metacubex/mihomo:latest}
+    container_name: mihomo
+    restart: unless-stopped
+    networks: [aigw]
+    volumes:
+      - ./config/mihomo/config.yaml:/root/.config/mihomo/config.yaml
+
+  # ---- 可选:Cloudflare 隧道公网入口。需要时取消注释并填 .env 里的 token ----
+  # cloudflared:
+  #   image: cloudflare/cloudflared:latest
+  #   container_name: cloudflared
+  #   restart: unless-stopped
+  #   networks: [aigw]
+  #   command: tunnel --no-autoupdate run
+  #   environment:
+  #     - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}

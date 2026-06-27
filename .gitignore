@@ -1,0 +1,7 @@
+# 绝不提交的:真实密钥 / 凭证 / 数据
+.env
+data/
+config/cliproxyapi/config.yaml
+config/mihomo/config.yaml
+config/mihomo/providers/
+*.bak

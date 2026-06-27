@@ -1,0 +1,51 @@
+# mihomo (Clash Meta) 配置模板 —— 只做「AI 上游走代理、国内直连」的最小分流
+# 用法:cp config.example.yaml config.yaml,把你自己的节点填进 proxies / proxy-providers。
+# 设计:不内置任何节点(节点是你自己的),只给规则骨架 + 健康检查。
+
+mixed-port: 7890                 # docker-compose 里其它容器用 http://mihomo:7890 出站
+mode: rule
+log-level: info
+ipv6: false
+
+# ↓↓↓ 填你自己的节点。两种方式二选一(或都用):
+proxies: []
+# proxies:
+#   - { name: "node-1", type: ss, server: example.com, port: 8388, cipher: aes-256-gcm, password: "xxx" }
+
+proxy-providers: {}
+# proxy-providers:
+#   my-sub:
+#     type: http
+#     url: "https://your-subscription-url"
+#     interval: 3600
+#     path: ./providers/my-sub.yaml
+#     health-check: { enable: true, url: "https://api.openai.com/v1/models", interval: 300 }
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    # 把你的节点名 / 或 provider 列在这里;use: 引用 proxy-providers
+    proxies: [AUTO, DIRECT]
+    # use: [my-sub]
+
+  # 自动优选:用「能不能连上 AI API」当健康检查,坏节点(对 AI 报 TLS-EOF)自动判死
+  - name: AUTO
+    type: url-test
+    url: "https://api.openai.com/v1/models"
+    interval: 300
+    tolerance: 50
+    proxies: []
+    # use: [my-sub]
+
+rules:
+  # —— 国外 AI 上游:走代理 ——
+  - DOMAIN-SUFFIX,openai.com,PROXY
+  - DOMAIN-SUFFIX,anthropic.com,PROXY
+  - DOMAIN-SUFFIX,claude.ai,PROXY
+  - DOMAIN-SUFFIX,googleapis.com,PROXY
+  - DOMAIN-SUFFIX,google.com,PROXY
+  - DOMAIN-SUFFIX,gstatic.com,PROXY
+  # —— 国内:直连(DeepSeek / 智谱 / Kimi / 通义等国内可达,不用代理)——
+  - GEOIP,CN,DIRECT
+  # —— 其余:默认走代理(按需改 DIRECT)——
+  - MATCH,PROXY
