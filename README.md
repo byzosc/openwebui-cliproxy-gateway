@@ -1,5 +1,11 @@
 # Self-Hosted Private AI Gateway Kit
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Deploy: docker compose](https://img.shields.io/badge/deploy-docker%20compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
+[![Stars](https://img.shields.io/github/stars/zerbLion/openwebui-cliproxy-gateway?logo=github)](https://github.com/zerbLion/openwebui-cliproxy-gateway/stargazers)
+[![Frontend: Open WebUI](https://img.shields.io/badge/frontend-Open%20WebUI-111)](https://github.com/open-webui/open-webui)
+[![Gateway: CLIProxyAPI](https://img.shields.io/badge/gateway-CLIProxyAPI-1f6feb)](https://github.com/router-for-me/CLIProxyAPI)
+
 > 把你**订阅的** Claude / Codex(GPT)/ Gemini 等账号,变成一个**自托管、自用**的 OpenAI 兼容网关 + 多模型并排聊天前端。一份 `docker compose` 起全套。
 >
 > Turn your **own** Claude / Codex / Gemini subscriptions into a self-hosted,
