@@ -6,6 +6,8 @@
 [![Frontend: Open WebUI](https://img.shields.io/badge/frontend-Open%20WebUI-111)](https://github.com/open-webui/open-webui)
 [![Gateway: CLIProxyAPI](https://img.shields.io/badge/gateway-CLIProxyAPI-1f6feb)](https://github.com/router-for-me/CLIProxyAPI)
 
+![Self-Hosted Private AI Gateway](social-preview.png)
+
 > 把你**订阅的** Claude / Codex(GPT)/ Gemini 等账号,变成一个**自托管、自用**的 OpenAI 兼容网关 + 多模型并排聊天前端。一份 `docker compose` 起全套。
 >
 > Turn your **own** Claude / Codex / Gemini subscriptions into a self-hosted,
@@ -42,12 +44,23 @@
 
 ---
 
+## 截图 / Screenshots
+
+> 多模型并排 + 合成单一答案(MoA)的实际界面(来自 Open WebUI)。
+> _截图待补 —— 跑起来后把图放进 `docs/screenshots/`,取消下面注释即可。_
+> _Screenshots coming — drop images into `docs/screenshots/` and uncomment below._
+
+<!-- ![多模型并排 / Multi-model side-by-side](docs/screenshots/multi-model.png) -->
+<!-- ![合成答案 / Merged answer (MoA)](docs/screenshots/moa.png) -->
+
+---
+
 ## 快速开始
 
 前置:一台常开的机器(NAS / VPS / 旁路由皆可)+ Docker + Docker Compose。
 
 ```bash
-git clone https://github.com/<owner>/openwebui-cliproxy-gateway
+git clone https://github.com/zerbLion/openwebui-cliproxy-gateway
 cd openwebui-cliproxy-gateway
 
 # 1) 配置
@@ -78,6 +91,34 @@ cp config/mihomo/config.example.yaml      config/mihomo/config.yaml        # 填
 
 ---
 
+## 常见问题 FAQ
+
+**Q:需要会员/订阅吗?**
+A:需要。本项目**不提供任何额度**,接的是你自己的 Claude / Codex / Gemini 订阅(或 API key)。
+
+**Q:海外服务器也要配代理(mihomo)吗?**
+A:不用。海外机器直连国外上游,可把 mihomo 规则全设 `DIRECT`,或干脆不起 mihomo。代理只为"国内出国调用国外 API"那一跳。
+
+**Q:能用国内模型吗(DeepSeek / 智谱 / Kimi / 通义)?**
+A:能。国内模型直连,mihomo 规则里 `GEOIP,CN,DIRECT` 保证不走代理。
+
+**Q:数据存在哪?会上传吗?**
+A:全在你机器的挂载卷(`${DATA_ROOT}`),会话历史本地保存,不出本地。
+
+**Q:手机能用吗?**
+A:能。Open WebUI 是网页 + PWA,手机"添加到主屏"后近乎原生体验。
+
+**Q:和直接填官方 API key 有什么区别?**
+A:这里用的是**订阅 OAuth**(吃你的月费会员额度),不是按量计费的 API;并且能多家**并排**对比、合成答案。
+
+**Q:Gemini 怎么接?**
+A:用 **Antigravity OAuth**。老的 gemini-cli 个人版 OAuth 已被官方下线、且封禁第三方代理用法,别再用。
+
+**Q:这合法吗 / 会封号吗?**
+A:用订阅凭证反代成 API **可能违反对应服务商条款**,本项目不规避任何条款,**风险自负**,建议仅个人自托管自用。
+
+---
+
 ## ⚠️ 须知 / Disclaimer
 
 - 用订阅凭证反代成 API,**可能违反相应服务商的使用条款**。本套件不规避任何条款;**凭证与账号风险由你自负**。请仅用于个人自托管、自用场景。
@@ -89,6 +130,15 @@ cp config/mihomo/config.example.yaml      config/mihomo/config.yaml        # 填
 
 套件自有代码(脚本 / compose / 模板 / 文档)= **MIT**。
 内嵌的三个组件各自许可,见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)(本套件不打包它们,运行时拉官方镜像)。
+
+---
+
+## 贡献 / Contributing
+
+欢迎 issue 和 PR —— bug 反馈、文档改进、更多上游的分流规则模板都很欢迎。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+Issues and PRs welcome — bug reports, docs, more upstream routing templates. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+如果这个项目帮到你,点个 ⭐ 是最大的支持。 / If it helps you, a ⭐ is the best support.
 
 ---
 
