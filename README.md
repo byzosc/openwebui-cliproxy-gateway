@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Deploy: docker compose](https://img.shields.io/badge/deploy-docker%20compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
-[![Stars](https://img.shields.io/github/stars/zerbLion/openwebui-cliproxy-gateway?logo=github)](https://github.com/zerbLion/openwebui-cliproxy-gateway/stargazers)
+[![Stars](https://img.shields.io/github/stars/byzosc/openwebui-cliproxy-gateway?logo=github)](https://github.com/byzosc/openwebui-cliproxy-gateway/stargazers)
 [![Frontend: Open WebUI](https://img.shields.io/badge/frontend-Open%20WebUI-111)](https://github.com/open-webui/open-webui)
 [![Gateway: CLIProxyAPI](https://img.shields.io/badge/gateway-CLIProxyAPI-1f6feb)](https://github.com/router-for-me/CLIProxyAPI)
 
@@ -60,7 +60,7 @@
 前置:一台常开的机器(NAS / VPS / 旁路由皆可)+ Docker + Docker Compose。
 
 ```bash
-git clone https://github.com/zerbLion/openwebui-cliproxy-gateway
+git clone https://github.com/byzosc/openwebui-cliproxy-gateway
 cd openwebui-cliproxy-gateway
 
 # 1) 配置
